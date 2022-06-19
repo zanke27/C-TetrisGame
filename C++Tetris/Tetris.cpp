@@ -101,6 +101,8 @@ void DrawMapAndBlock(char Map[HEIGHT][WEIGHT])
 void SpawnBlock(char Map[HEIGHT][WEIGHT], PBlock pBlock, int blockType)
 {
 	pBlock->blockType = blockType;
+	pBlock->bPos.blockLeftUpX = 4;
+	pBlock->bPos.blockLeftUpY = 0;
 	int check = 0;
 	for (int i = 0; i < 4; i++)
 	{
@@ -129,6 +131,8 @@ void DownBlock(char Map[HEIGHT][WEIGHT], PBlock pBlock)
 	for (int i = 0; i < 4; i++)
 		pBlock->bPos.blockY[i] += 1;
 
+	pBlock->bPos.blockLeftUpY += 1;
+
 	for (int i = 0; i < 4; i++)
 		Map[pBlock->bPos.blockY[i]][pBlock->bPos.blockX[i]] = (char)(pBlock->blockType + '0');
 }
@@ -145,80 +149,44 @@ bool ReachBlock(char Map[HEIGHT][WEIGHT], PBlock pBlock)
 	return isCheck;
 }
 
-void TurnBlock(char Map[HEIGHT][WEIGHT], PBlock pBlock)
+void TurnBlock(char Map[HEIGHT][WEIGHT], PBlock pBlock, bool isLeftRotate)
 {
+	int check = 0;
 	for (int i = 0; i < 4; i++)
-		Map[pBlock->bPos.blockY[i]][pBlock->bPos.blockX[i]] = '0';
-
-	switch (pBlock->blockType)
 	{
-	case 2:
-		switch (pBlock->rotationNum)
+		for (int j = 0; j < 4; j++)
 		{
-		case 1:
-		case 3:
-			if (Map[pBlock->bPos.blockY[0] - 2][pBlock->bPos.blockX[0] - 2] != '2'
-				&& Map[pBlock->bPos.blockY[0] - 2][pBlock->bPos.blockX[0] - 2] != '0' ||
-
-				Map[pBlock->bPos.blockY[1] - 1][pBlock->bPos.blockX[1] - 1] != '2'
-				&& Map[pBlock->bPos.blockY[1] - 1][pBlock->bPos.blockX[1] - 1] != '0' ||
-
-				//Map[pBlock->bPos.blockY[1] - 1][pBlock->bPos.blockX[1] - 1] != '2'
-				//&& Map[pBlock->bPos.blockY[1] - 1][pBlock->bPos.blockX[1] - 1] != '0' ||
-
-				Map[pBlock->bPos.blockY[3] + 1][pBlock->bPos.blockX[3] + 1] != '2'
-				&& Map[pBlock->bPos.blockY[3] + 1][pBlock->bPos.blockX[3] + 1] != '0'
-				)
-			pBlock->bPos.blockY[0] = pBlock->bPos.blockY[0] - 2;
-			pBlock->bPos.blockX[0] = pBlock->bPos.blockX[0] - 2;
-
-			pBlock->bPos.blockY[1] = pBlock->bPos.blockY[1] - 1;
-			pBlock->bPos.blockX[1] = pBlock->bPos.blockX[1] - 1;
-
-			//pBlock->bPos.blockY[2] = pBlock->bPos.blockY[2] + 0;
-			//pBlock->bPos.blockX[2] = pBlock->bPos.blockX[2] + 0;
-
-			pBlock->bPos.blockY[3] = pBlock->bPos.blockY[3] + 1;
-			pBlock->bPos.blockX[3] = pBlock->bPos.blockX[3] + 1;
-			break;
-		case 2:
-		case 4:
-			pBlock->bPos.blockY[0] = pBlock->bPos.blockY[0] + 2;
-			pBlock->bPos.blockX[0] = pBlock->bPos.blockX[0] + 2;
-
-			pBlock->bPos.blockY[1] = pBlock->bPos.blockY[1] + 1;
-			pBlock->bPos.blockX[1] = pBlock->bPos.blockX[1] + 1;
-
-			//pBlock->bPos.blockY[2] = pBlock->bPos.blockY[2] + 0;
-			//pBlock->bPos.blockX[2] = pBlock->bPos.blockX[2] + 0;
-
-			pBlock->bPos.blockY[3] = pBlock->bPos.blockY[3] - 1;
-			pBlock->bPos.blockX[3] = pBlock->bPos.blockX[3] - 1;
-			break;
+			Map[pBlock->bPos.blockY[i]][pBlock->bPos.blockX[j]] = '0';
 		}
-		break;
-	case 3:
-
-		break;
-	case 4:
-
-		break;
-	case 5:
-
-		break;
-	case 6:
-
-		break;
-	case 7:
-
-		break;
-	case 8:
-
-		break;
+	}
+	if (isLeftRotate)
+	{
+		if (pBlock->rotationNum == 0)
+			pBlock->rotationNum = 3;
+		else
+			pBlock->rotationNum = pBlock->rotationNum - 1;
+	}
+	else if (!isLeftRotate)
+	{
+		pBlock->rotationNum = (pBlock->rotationNum + 1) % 4;
 	}
 
 	for (int i = 0; i < 4; i++)
-		Map[pBlock->bPos.blockY[i]][pBlock->bPos.blockX[i]] = (char)(pBlock->blockType + '0');
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			if (pBlock->bPos.blockShape[pBlock->blockType - 2][pBlock->rotationNum][i][j] == 1)
+			{
+				pBlock->bPos.blockY[check] = pBlock->bPos.blockLeftUpY + i;
+				pBlock->bPos.blockX[check] = pBlock->bPos.blockLeftUpX + j;
+				check++;
+			}
+		}
+	}
+
+	// 일단 있는거 다 지우고
+	// 위치를 블럭에 1인 부분으로 바꿔주고
+	// draw에서 알아서 blockPos에 따라 해주겠지??
 }
 
 void bindBlock(char Map[HEIGHT][WEIGHT], PBlock pBlock)
@@ -245,6 +213,8 @@ void MoveLeftBlock(char Map[HEIGHT][WEIGHT], PBlock pBlock)
 		for (int i = 0; i < 4; i++)
 			pBlock->bPos.blockX[i] -= 1;
 
+		pBlock->bPos.blockLeftUpX -= 1;
+
 		for (int i = 0; i < 4; i++)
 			Map[pBlock->bPos.blockY[i]][pBlock->bPos.blockX[i]] = (char)(pBlock->blockType + '0');
 	}
@@ -268,6 +238,8 @@ void MoveRightBlock(char Map[HEIGHT][WEIGHT], PBlock pBlock)
 		for (int i = 0; i < 4; i++)
 			pBlock->bPos.blockX[i] += 1;
 
+		pBlock->bPos.blockLeftUpX += 1;
+
 		for (int i = 0; i < 4; i++)
 			Map[pBlock->bPos.blockY[i]][pBlock->bPos.blockX[i]] = (char)(pBlock->blockType + '0');
 	}
@@ -280,5 +252,10 @@ bool CheckBlock(char Map[HEIGHT][WEIGHT])
 		if (Map[2][i] != '0')
 			return true;
 	}
+	return false;
+}
+
+bool DoClearBlock(char Map[HEIGHT][WEIGHT])
+{
 	return false;
 }

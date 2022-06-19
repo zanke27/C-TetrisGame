@@ -10,7 +10,7 @@ int random = 0;
 int randomNum;
 int main(void)
 {
-	//fullscreen();
+	fullscreen();
 	SetMap(mainMap);
 	for (int i = 0; i < 7; i++)
 		arr[i] = (i + 1);
@@ -41,6 +41,13 @@ int main(void)
 		while (true)
 		{
 			gotoxy(0, 0);
+
+			if (GetAsyncKeyState(0x45) & 0x8001) // E 우회전
+				TurnBlock(mainMap, &block, false);
+
+			if (GetAsyncKeyState(0x51) & 0x8001) // Q 좌회전
+				TurnBlock(mainMap, &block, true);
+
 			if (ReachBlock(mainMap, &block) == true)
 			{
 				bindBlock(mainMap, &block);
@@ -54,9 +61,6 @@ int main(void)
 			if (GetAsyncKeyState(VK_RIGHT))
 				MoveRightBlock(mainMap, &block);
 
-			if (GetAsyncKeyState(0x52) & 0x8001) // 0x52 = R
-				TurnBlock(mainMap, &block);
-
 			for (int i = 1; i < HEIGHT ; i++)
 			{
 				for (int j = 0; j < WEIGHT; j++)
@@ -66,11 +70,12 @@ int main(void)
 				cout << endl;
 			}
 
-			Sleep(100);
-			//system("cls");
+			Sleep(250);
 		}
 		if (CheckBlock(mainMap) == true)
 			break;
+
+
 	}
 	system("cls");
 	cout << "Game End" << endl;
