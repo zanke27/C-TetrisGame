@@ -92,6 +92,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -145,7 +146,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="console.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Tetris.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="C++Tetris.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="AudioSource\blipSelect.wav" />
+    <Media Include="AudioSource\hipjazz.mp3" />
+    <Media Include="AudioSource\pickupCoin.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -32,5 +32,24 @@
     <ClInclude Include="Tetris.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="C++Tetris.rc">
+      <Filter>리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="AudioSource\blipSelect.wav">
+      <Filter>리소스 파일</Filter>
+    </Media>
+    <Media Include="AudioSource\hipjazz.mp3">
+      <Filter>리소스 파일</Filter>
+    </Media>
+    <Media Include="AudioSource\pickupCoin.wav">
+      <Filter>리소스 파일</Filter>
+    </Media>
   </ItemGroup>
 </Project>

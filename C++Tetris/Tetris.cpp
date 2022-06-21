@@ -103,6 +103,7 @@ void SpawnBlock(char Map[HEIGHT][WEIGHT], PBlock pBlock, int blockType)
 	pBlock->blockType = blockType;
 	pBlock->bPos.blockLeftUpX = 4;
 	pBlock->bPos.blockLeftUpY = 0;
+	pBlock->rotationNum = 0;
 	int check = 0;
 	for (int i = 0; i < 4; i++)
 	{
@@ -152,6 +153,41 @@ bool ReachBlock(char Map[HEIGHT][WEIGHT], PBlock pBlock)
 void TurnBlock(char Map[HEIGHT][WEIGHT], PBlock pBlock, bool isLeftRotate)
 {
 	int check = 0;
+	int tempRotationNum = pBlock->rotationNum;
+
+	if (isLeftRotate)
+	{
+		if (tempRotationNum == 0)
+			tempRotationNum = 3;
+		else
+			tempRotationNum = tempRotationNum - 1;
+	}
+	else if (!isLeftRotate)
+	{
+		tempRotationNum = (tempRotationNum + 1) % 4;
+	}
+
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			if (pBlock->bPos.blockShape[pBlock->blockType - 2][tempRotationNum][i][j] == 1)
+			{
+				if (Map[pBlock->bPos.blockLeftUpY + i][pBlock->bPos.blockLeftUpX + j] != '0' &&
+					Map[pBlock->bPos.blockLeftUpY + i][pBlock->bPos.blockLeftUpX + j] != (char)(pBlock->blockType + '0'))
+				{
+					check++;
+				}
+			}
+		}
+	}
+
+	if (check >= 1)
+	{
+		return;
+	}
+
+	check = 0;
 	for (int i = 0; i < 4; i++)
 	{
 		for (int j = 0; j < 4; j++)
@@ -189,7 +225,7 @@ void TurnBlock(char Map[HEIGHT][WEIGHT], PBlock pBlock, bool isLeftRotate)
 	// draw에서 알아서 blockPos에 따라 해주겠지??
 }
 
-void bindBlock(char Map[HEIGHT][WEIGHT], PBlock pBlock)
+void BindBlock(char Map[HEIGHT][WEIGHT], PBlock pBlock)
 {
 	for (int i = 0; i < 4; i++)
 		Map[pBlock->bPos.blockY[i]][pBlock->bPos.blockX[i]] = (char)(pBlock->blockType + 63);
@@ -245,17 +281,69 @@ void MoveRightBlock(char Map[HEIGHT][WEIGHT], PBlock pBlock)
 	}
 }
 
+void ClearBlock(char Map[HEIGHT][WEIGHT], int howLine)
+{
+	for (int i = howLine; i > 4; i--)
+	{
+		for (int j = 1; j < 11; j++)
+		{
+			if (Map[i-1][j] != '2' && Map[i-1][j] != '3' && Map[i-1][j] != '4' && Map[i-1][j] != '5' &&
+				Map[i-1][j] != '6' && Map[i-1][j] != '7' && Map[i-1][j] != '8')
+				Map[i][j] = Map[i - 1][j];
+			else
+				Map[i][j] = '0';
+		}
+	}
+
+	// 라인 위부터 줄까지 한칸씩 당김
+}
+
+bool Delay(clock_t time, int delayTime)
+{
+	if (clock() - time > delayTime)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+long DelayStart()
+{
+	clock_t start = clock();
+	return start;
+}
+
+int ClearBlockLine(char Map[HEIGHT][WEIGHT])
+{
+	int temp = 0;
+	for (int i = 23; i > 4; i--)
+	{
+		for (int j = 1; j < 11; j++)
+		{
+			if (Map[i][j] == '0')
+				temp++;
+		}
+		if (temp == 0)
+		{
+			temp = i;
+			break;
+		}
+		else
+			temp = 0;
+	}
+
+	return temp;
+}
+
 bool CheckBlock(char Map[HEIGHT][WEIGHT])
 {
 	for (int i = 1; i < 11; i++)
 	{
-		if (Map[2][i] != '0')
+		if (Map[3][i] != '0')
 			return true;
 	}
-	return false;
-}
-
-bool DoClearBlock(char Map[HEIGHT][WEIGHT])
-{
 	return false;
 }

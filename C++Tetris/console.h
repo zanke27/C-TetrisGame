@@ -6,8 +6,12 @@
 #include <io.h>
 #include <fcntl.h>
 #include <random>
+#include <ctime>
+#include <mmsystem.h>
+#include <Digitalv.h>
 
 using namespace std;
 void gotoxy(int x, int y);
 void setcolor(int color, int bgcolor);
 void fullscreen();
+void CursorView();
