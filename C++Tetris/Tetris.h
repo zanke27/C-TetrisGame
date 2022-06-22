@@ -228,6 +228,7 @@ void TurnBlock(char Map[HEIGHT][WEIGHT], PBlock pBlock, bool isLeftRotate); // �
 void BindBlock(char Map[HEIGHT][WEIGHT], PBlock pBlock);				    // 블럭을 그 위치에 고정 (바닥에 닿았을 때 실행)
 void MoveLeftBlock(char Map[HEIGHT][WEIGHT], PBlock pBlock);			    // 블럭을 왼쪽으로 이동
 void MoveRightBlock(char Map[HEIGHT][WEIGHT], PBlock pBlock);			    // 블럭을 오른쪽으로 이동
+void MoveDownBlock(char Map[HEIGHT][WEIGHT], PBlock pBlock);
 void ClearBlock(char Map[HEIGHT][WEIGHT], int howLine);					    // 블럭을 삭제
 
 bool Delay(clock_t time, int delayTime);

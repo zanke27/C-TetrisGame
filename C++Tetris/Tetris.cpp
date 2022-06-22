@@ -281,6 +281,31 @@ void MoveRightBlock(char Map[HEIGHT][WEIGHT], PBlock pBlock)
 	}
 }
 
+void MoveDownBlock(char Map[HEIGHT][WEIGHT], PBlock pBlock)
+{
+	bool isCan = true;
+	for (int i = 0; i < 4; i++)
+	{
+		if (Map[pBlock->bPos.blockY[i+1]][pBlock->bPos.blockX[i]] != (char)(pBlock->blockType + '0')
+			&& Map[pBlock->bPos.blockY[i+1]][pBlock->bPos.blockX[i]] != '0')
+			isCan = false;
+	}
+
+	if (isCan == true)
+	{
+		for (int i = 0; i < 4; i++)
+			Map[pBlock->bPos.blockY[i]][pBlock->bPos.blockX[i]] = '0';
+
+		for (int i = 0; i < 4; i++)
+			pBlock->bPos.blockY[i] += 1;
+
+		pBlock->bPos.blockLeftUpY += 1;
+
+		for (int i = 0; i < 4; i++)
+			Map[pBlock->bPos.blockY[i]][pBlock->bPos.blockX[i]] = (char)(pBlock->blockType + '0');
+	}
+}
+
 void ClearBlock(char Map[HEIGHT][WEIGHT], int howLine)
 {
 	for (int i = howLine; i > 4; i--)

@@ -46,7 +46,7 @@ void Game()
 	arrCount = 6;		
 	random = 0;			
 	randomNum;			
-	clearLine = 25;		
+	clearLine = 0;		
 	checkTime = 0;		
 	score = 0;
 
@@ -124,6 +124,21 @@ void Game()
 				break;
 			}
 
+			if (GetAsyncKeyState(VK_DOWN) & 0x8000)
+			{
+				DownBlock(mainMap, &block);
+				gotoxy(0, 0);
+				DrawMapAndBlock(mainMap);
+				if (ReachBlock(mainMap, &block) == true)
+				{
+					BindBlock(mainMap, &block);
+					gotoxy(0, 0);
+					DrawMapAndBlock(mainMap);
+					break;
+				}
+				Sleep(10);
+			}
+
 			if (GetAsyncKeyState(VK_LEFT) & 0x8000)
 			{
 				MoveLeftBlock(mainMap, &block);
@@ -161,10 +176,11 @@ void Game()
 
 				cout << endl;
 				cout << "지운 라인 수: " << clearLine << endl;
-				cout << "좌우 이동 화살표 <- / ->" << endl;
-				cout << "좌우 회전 Z / X" << endl;
-				cout << "바로 내리기 Space" << endl;
-				cout << "아이템1 Ctrl (지운 라인 수 나누기 5만큼 라인을 지움)" << endl;
+				cout << "좌우 이동: 화살표 ← / →" << endl;
+				cout << "좌우 회전: Z / X" << endl;
+				cout << "내리기 : 화살표 ↓" << endl;
+				cout << "바로 내리기: Space" << endl;
+				cout << "줄 지우개: Ctrl (지운 라인 수 나누기 5만큼 라인을 지움)" << endl;
 			}
 		}
 		if (CheckBlock(mainMap) == true)
