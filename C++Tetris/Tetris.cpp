@@ -35,8 +35,6 @@ void DrawMapAndBlock(char Map[HEIGHT][WEIGHT])
 {
 	for (int i = 1; i < HEIGHT; i++)
 	{
-		//char asd = _setmode(_fileno(stdout), _O_U8TEXT);
-		//char asdsf = _setmode(_fileno(stdout), _O_TEXT);
 		for (int j = 0; j < WEIGHT-1; j++)
 		{
 			if (i == 3 && j != 0 && j != 11 && Map[i][j] == '0') // 라인
@@ -126,6 +124,8 @@ void SpawnBlock(char Map[HEIGHT][WEIGHT], PBlock pBlock, int blockType)
 
 void DownBlock(char Map[HEIGHT][WEIGHT], PBlock pBlock)
 {
+
+
 	for (int i = 0; i < 4; i++)
 		Map[pBlock->bPos.blockY[i]][pBlock->bPos.blockX[i]] = '0';
 
@@ -153,6 +153,7 @@ bool ReachBlock(char Map[HEIGHT][WEIGHT], PBlock pBlock)
 void TurnBlock(char Map[HEIGHT][WEIGHT], PBlock pBlock, bool isLeftRotate)
 {
 	int check = 0;
+	int fortemp = 0;
 	int tempRotationNum = pBlock->rotationNum;
 
 	if (isLeftRotate)
@@ -213,12 +214,13 @@ void TurnBlock(char Map[HEIGHT][WEIGHT], PBlock pBlock, bool isLeftRotate)
 		{
 			if (pBlock->bPos.blockShape[pBlock->blockType - 2][pBlock->rotationNum][i][j] == 1)
 			{
-				pBlock->bPos.blockY[check] = pBlock->bPos.blockLeftUpY + i;
-				pBlock->bPos.blockX[check] = pBlock->bPos.blockLeftUpX + j;
-				check++;
+				pBlock->bPos.blockY[fortemp] = pBlock->bPos.blockLeftUpY + i;
+				pBlock->bPos.blockX[fortemp] = pBlock->bPos.blockLeftUpX + j;
+				fortemp++;
 			}
 		}
 	}
+	fortemp = 0;
 
 	// 일단 있는거 다 지우고
 	// 위치를 블럭에 1인 부분으로 바꿔주고

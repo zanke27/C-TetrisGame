@@ -1,5 +1,7 @@
 #include "console.h";
 #include "Tetris.h";
+#pragma comment(lib, "winmm.lib")
+
 using namespace std;
 
 Block block;
@@ -34,7 +36,7 @@ void Playingbgm()
 void Playingeffect()
 {
 	mciSendCommand(dwID2, MCI_SEEK, MCI_SEEK_TO_START, (DWORD)(LPVOID)&Openeffect);
-	Openeffect.lpstrElementName = TEXT("AudioSouorce/pickupCoin.wav");
+	Openeffect.lpstrElementName = TEXT("AudioSource/pickupCoin.wav");
 	Openeffect.lpstrDeviceType = TEXT("waveaudio");
 	mciSendCommand(0, MCI_OPEN, MCI_OPEN_ELEMENT | MCI_OPEN_TYPE, (DWORD)(LPVOID)&Openeffect);
 	dwID2 = Openeffect.wDeviceID;
@@ -126,7 +128,7 @@ void Game()
 
 			if (GetAsyncKeyState(VK_DOWN) & 0x8000)
 			{
-				DownBlock(mainMap, &block);
+				MoveDownBlock(mainMap, &block);
 				gotoxy(0, 0);
 				DrawMapAndBlock(mainMap);
 				if (ReachBlock(mainMap, &block) == true)
@@ -181,6 +183,7 @@ void Game()
 				cout << "내리기 : 화살표 ↓" << endl;
 				cout << "바로 내리기: Space" << endl;
 				cout << "줄 지우개: Ctrl (지운 라인 수 나누기 5만큼 라인을 지움)" << endl;
+				cout << endl << "스코어: " << score << endl;
 			}
 		}
 		if (CheckBlock(mainMap) == true)
